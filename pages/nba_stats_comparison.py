@@ -10,13 +10,19 @@ def load_data():
 
 df_projections, df_stats = load_data()
 
-# Adjust column names in actuals to match projections for consistent comparison
-df_stats.rename(columns={'MP': 'MPG', 'FG%': 'FGP', 'FT%': 'FTP', '3P': '3PM', 'PTS': 'PTS'}, inplace=True)
+# Debugging: Print the column names to verify
+st.write("Projections Columns:", df_projections.columns)
+st.write("Stats Columns:", df_stats.columns)
+
+# Correct column naming if necessary
+df_stats.rename(columns={'Player': 'PLAYER'}, inplace=True)  # Ensure this matches the projections DataFrame
 
 def preprocess_data(df, columns):
     for col in columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col].astype(str).replace('%', '').replace(',', '.'), errors='coerce')
+        else:
+            st.write(f"Column {col} not found in DataFrame")
     return df
 
 # Define the common columns to compare based on projections
@@ -32,7 +38,7 @@ selected_player = st.selectbox('Select a Player', player_list)
 
 def plot_player_data(player):
     player_projections = df_projections[df_projections['PLAYER'].str.contains(player, na=False)]
-    player_actuals = df_stats[df_stats['Player'].str.contains(player, na=False)]
+    player_actuals = df_stats[df_stats['PLAYER'].str.contains(player, na=False)]
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 6))
     if not player_projections.empty and not player_actuals.empty:
@@ -49,4 +55,3 @@ def plot_player_data(player):
         st.write("No data available for this player.")
 
 plot_player_data(selected_player)
-
