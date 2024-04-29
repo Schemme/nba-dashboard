@@ -1,8 +1,8 @@
 import streamlit as st
 
-# Load and display an image
-nba_logo_path = "https://1000logos.net/nba-logo/"  
-st.image(nba_logo_path, caption='NBA 2023-2024')
+# Assuming the logo is renamed and correctly formatted as 'nba_logo_2024.png'
+nba_logo_path = "nba_logo_2024.png"  # Update this path to your actual image file path
+st.image(nba_logo_path, caption='NBA Logo 2024')
 
 st.write("# NBA Dashboard")
 
