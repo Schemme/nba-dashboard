@@ -1,117 +1,51 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-from urllib.error import URLError
-
 import pandas as pd
-import pydeck as pdk
-
 import streamlit as st
-from streamlit.hello.utils import show_code
+import plotly.express as px
 
+# Load the CSV file into a pandas DataFrame
+@st.cache_data
+def load_data(file_path):
+    df = pd.read_csv(file_path)
+    return df
 
-def mapping_demo():
-    @st.cache_data
-    def from_data_file(filename):
-        url = (
-            "https://raw.githubusercontent.com/streamlit/"
-            "example-data/master/hello/v1/%s" % filename
-        )
-        return pd.read_json(url)
+def calculate_per(row):
+    per = (row['PTS'] + row['TRB'] + row['AST'] + row['STL'] + row['BLK'] - row['TOV'] - (row['FGA'] - row['FG']) - (0.5 * (row['FTA'] - row['FT'])) / row['MP']) / row['MP']
+    return per
 
-    try:
-        ALL_LAYERS = {
-            "Bike Rentals": pdk.Layer(
-                "HexagonLayer",
-                data=from_data_file("bike_rental_stats.json"),
-                get_position=["lon", "lat"],
-                radius=200,
-                elevation_scale=4,
-                elevation_range=[0, 1000],
-                extruded=True,
-            ),
-            "Bart Stop Exits": pdk.Layer(
-                "ScatterplotLayer",
-                data=from_data_file("bart_stop_stats.json"),
-                get_position=["lon", "lat"],
-                get_color=[200, 30, 0, 160],
-                get_radius="[exits]",
-                radius_scale=0.05,
-            ),
-            "Bart Stop Names": pdk.Layer(
-                "TextLayer",
-                data=from_data_file("bart_stop_stats.json"),
-                get_position=["lon", "lat"],
-                get_text="name",
-                get_color=[0, 0, 0, 200],
-                get_size=10,
-                get_alignment_baseline="'bottom'",
-            ),
-            "Outbound Flow": pdk.Layer(
-                "ArcLayer",
-                data=from_data_file("bart_path_stats.json"),
-                get_source_position=["lon", "lat"],
-                get_target_position=["lon2", "lat2"],
-                get_source_color=[200, 30, 0, 160],
-                get_target_color=[200, 30, 0, 160],
-                auto_highlight=True,
-                width_scale=0.0001,
-                get_width="outbound",
-                width_min_pixels=3,
-                width_max_pixels=30,
-            ),
-        }
-        st.sidebar.markdown("### Map Layers")
-        selected_layers = [
-            layer
-            for layer_name, layer in ALL_LAYERS.items()
-            if st.sidebar.checkbox(layer_name, True)
-        ]
-        if selected_layers:
-            st.pydeck_chart(
-                pdk.Deck(
-                    map_style=None,
-                    initial_view_state={
-                        "latitude": 37.76,
-                        "longitude": -122.4,
-                        "zoom": 11,
-                        "pitch": 50,
-                    },
-                    layers=selected_layers,
-                )
-            )
-        else:
-            st.error("Please choose at least one layer above.")
-    except URLError as e:
-        st.error(
-            """
-            **This demo requires internet access.**
-            Connection error: %s
-        """
-            % e.reason
-        )
+def main():
+    st.title('All-NBA Team Candidates by PER')
 
+    # Introductory paragraph
+    st.write("""At the end of each year the top 15 players in the NBA get voted to an All-NBA team. There are 3 teams each composed of 2 guards, 2 forwards, and 1 center.
+Aside from being named MVP, this is the biggest recognition a player can receive for their performances in a year. With that being said we have created this visualization sorted by position to allow you guys to get a feel for who is at the top of the league in terms of performance and might be named to one of the 3 All-NBA teams when the season concludes.""")
 
-st.set_page_config(page_title="Mapping Demo", page_icon="🌍")
-st.markdown("# Mapping Demo")
-st.sidebar.header("Mapping Demo")
-st.write(
-    """This demo shows how to use
-[`st.pydeck_chart`](https://docs.streamlit.io/library/api-reference/charts/st.pydeck_chart)
-to display geospatial data."""
-)
+    df = load_data('https://raw.githubusercontent.com/Brevon1104/dsc205/main/Total%20NBA%20Stats.csv')
 
-mapping_demo()
+    # Sidebar for position selection
+    position = st.sidebar.selectbox('Select Position', df['Pos'].unique())
 
-show_code(mapping_demo)
+    # Filter data for selected position
+    position_data = df[(df['Pos'] == position) & (df['G'] >= 65)]
+
+    # Calculate PER for each player
+    position_data['PER'] = position_data.apply(calculate_per, axis=1)
+
+    # Sort players by PER
+    position_data = position_data.sort_values(by='PER', ascending=False)
+
+    # Select top 10 players
+    top_10_players = position_data.head(10)
+
+    # Plot PER by player
+    fig = px.bar(top_10_players, x='Player', y='PER',color='Player',title=f'Top 10 Players by PER ({position} Position)')
+    fig.update_xaxes(title_text='Player')
+    fig.update_yaxes(title_text='Player Efficiency Rating')
+
+    # Rotate x-axis labels for better readability
+    fig.update_layout(xaxis_tickangle=-45)
+
+    # Show plot
+    st.plotly_chart(fig)
+
+if __name__ == "__main__":
+    main()
