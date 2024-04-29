@@ -4,21 +4,27 @@ import matplotlib.pyplot as plt
 
 @st.cache
 def load_data():
-    # Load data using the correct relative paths
     projections = pd.read_csv('pages/Player Projects Search 2023-24 Preseason - Copy of AVERAGE PROJECTIONS.csv', skiprows=1)
     actuals = pd.read_csv('pages/2023-2024 NBA Player Stats_exported.csv')
     return projections, actuals
 
 df_projections, df_stats = load_data()
 
-# Rename columns to make them compatible
+# Print columns for debugging
+st.write("Projections Columns:", df_projections.columns)
+st.write("Actuals Columns:", df_stats.columns)
+
+# Ensure column names are correct
 df_stats.rename(columns={'MP': 'MPG', 'G': 'GP', 'FT%': 'FTP', 'FG%': 'FGP', '3P': '3PM', 'Player': 'PLAYER'}, inplace=True)
 df_projections.rename(columns={'FT%': 'FTP', 'FG%': 'FGP'}, inplace=True)
 
 def preprocess_data(df):
     numeric_columns = ['GP', 'MPG', 'FGP', 'FTP', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'FGM', 'FGA', 'FTM', 'FTA']
     for col in numeric_columns:
-        df[col] = pd.to_numeric(df[col].replace(',', '.', regex=True), errors='coerce')
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col].replace(',', '.', regex=True), errors='coerce')
+        else:
+            st.error(f"Column {col} not found in DataFrame. Please check the data.")
     return df
 
 df_projections = preprocess_data(df_projections)
@@ -34,7 +40,6 @@ def plot_player_data(player):
     player_actuals = df_stats[df_stats['PLAYER'].str.contains(player, na=False)]
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 6))
-    
     if not player_projections.empty and not player_actuals.empty:
         categories = ['GP', 'MPG', 'FGP', 'FTP', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'FGM', 'FGA', 'FTM', 'FTA']
         x = range(len(categories))
