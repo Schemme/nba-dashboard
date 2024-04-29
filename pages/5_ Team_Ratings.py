@@ -57,14 +57,19 @@ def main():
     teams = team_ratings['Tm'].unique().tolist()
     selected_teams = st.multiselect('Select teams to compare:', teams, default=[])
 
-    # Dropdown to select rating type
-    rating_types = ['Offensive_Rating', 'Defensive_Rating']
-    selected_rating_type = st.selectbox('Select rating type:', rating_types)
+    # Checkbox to select rating type
+    st.write("Select rating types:")
+    show_offensive_rating = st.checkbox('Offensive Rating')
+    show_defensive_rating = st.checkbox('Defensive Rating')
 
-    if selected_teams:
-        plot_ratings(team_ratings, selected_teams, selected_rating_type)
+    if show_offensive_rating and not show_defensive_rating:
+        plot_bar_chart(team_ratings, selected_teams, 'Offensive_Rating')
+    elif not show_offensive_rating and show_defensive_rating:
+        plot_bar_chart(team_ratings, selected_teams, 'Defensive_Rating')
+    elif show_offensive_rating and show_defensive_rating:
+        plot_scatter_plot(team_ratings, selected_teams)
     else:
-        st.write("Select one or more teams to display ratings.")
+        st.write("Select at least one rating type to display.")
 
 if __name__ == "__main__":
     main()
