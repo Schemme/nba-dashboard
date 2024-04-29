@@ -9,7 +9,7 @@ df = pd.read_csv(url)
 
 # Sidebar - Division selection
 division_options = df['DIVISION'].unique()
-selected_division = st.sidebar.selectbox('Select Division', division_options)
+selected_division = st.selectbox('Select Division', division_options)
 
 # Filter data based on selected division
 division_df = df[df['DIVISION'] == selected_division]
