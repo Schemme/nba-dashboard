@@ -1,6 +1,3 @@
-Certainly! Here's how you can integrate the descriptive text into the Streamlit app along with the code you provided. This code will now include the narrative explanations of the offensive and defensive ratings directly in the Streamlit interface.
-
-```python
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -44,7 +41,7 @@ def plot_ratings(data, selected_teams, rating_type):
 def main():
     st.title("NBA Team Ratings Visualization")
     st.write("""
-    NBA Team Ratings Visualization app. This tool allows you to compare the offensive and defensive ratings of NBA teams for the 2023-2024 season.
+    Welcome to the NBA Team Ratings Visualization app. This tool allows you to compare the offensive and defensive ratings of NBA teams for the 2023-2024 season.
     """)
     
     st.markdown("""
@@ -71,6 +68,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-This updated version of your code now includes the necessary context and explanations for users to understand what the ratings mean and how they are calculated. It also features the revised color coding for the bar graphs based on the selected rating type. This should make your app more informative and visually intuitive.
