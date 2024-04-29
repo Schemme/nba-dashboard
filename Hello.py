@@ -1,5 +1,9 @@
 import streamlit as st
 
+# Load and display an image
+nba_logo_path = "nba_logo_2024.png"  # If locally saved, or replace with a URL if hosted online
+st.image(nba_logo_path, caption='NBA Logo 2024')
+
 st.write("# NBA Dashboard")
 
 st.sidebar.success("Select an app above.")
