@@ -16,8 +16,8 @@ df_selected = df[selected_columns]
 # Filter the DataFrame to include only players who played at least 65 games
 df_filtered = df_selected[df_selected['G'] >= 65]
 
-st.sidebar.title('Select Stat to Filter By')
-statistic = st.sidebar.radio('Choose a Statistic', df_filtered.columns[:-1])  # Exclude 'G'
+st.title('Select Stat to Filter By')
+statistic = st.radio('Choose a Statistic', df_filtered.columns[:-1])  # Exclude 'G'
 
 # Sort the filtered DataFrame by the selected statistic
 sorted_df = df_filtered.sort_values(by=statistic, ascending=False)
