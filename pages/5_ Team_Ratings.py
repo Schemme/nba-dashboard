@@ -39,7 +39,8 @@ def plot_bar_chart(data, selected_teams, rating_type):
     st.pyplot(fig)
 
 def plot_scatter_plot(data, selected_teams):
-    fig = px.scatter(data, x='Defensive_Rating', y='Offensive_Rating', color='Tm', 
+    filtered_data = data[data['Tm'].isin(selected_teams)]
+    fig = px.scatter(filtered_data, x='Defensive_Rating', y='Offensive_Rating', color='Tm', 
                      hover_data=['Tm'], title='Offensive vs Defensive Ratings')
     st.plotly_chart(fig)
 
