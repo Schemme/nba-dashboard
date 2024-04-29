@@ -6,7 +6,7 @@ import plotly.express as px
 
 # Read CSV file from GitHub
 
-df=pd.read_csv('/workspaces/nba-dashboard/data/Total NBA Stats.csv')
+df=pd.read_csv('Total NBA Stats.csv')
 
 # MVPs list
 mvps = ['Nikola Jokić', 'Luka Dončić', 'Shai Gilgeous-Alexander', 'Jayson Tatum', 'Giannis Antetokounmpo', 'Domantas Sabonis','Jalen Brunson','LeBron James','Tyrese Haliburton','Anthony Davis']
