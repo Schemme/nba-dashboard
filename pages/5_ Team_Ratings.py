@@ -21,9 +21,7 @@ def calculate_team_ratings(df):
     }).reset_index()
 
 def plot_bar_chart(data, selected_teams, rating_type):
-    # Filter data for selected teams
     filtered_data = data[data['Tm'].isin(selected_teams)]
-    # Plotting
     fig, ax = plt.subplots(figsize=(10, 6))
     team_indices = range(len(filtered_data))  # Team indices
     color = 'blue' if rating_type == 'Defensive_Rating' else 'red'
@@ -32,8 +30,10 @@ def plot_bar_chart(data, selected_teams, rating_type):
     ax.set_xlabel('Teams')
     ax.set_ylabel('Rating')
     ax.set_title(f'Team {rating_type}')
+
+    # Rotate x-axis labels
     ax.set_xticks(team_indices)
-    ax.set_xticklabels(filtered_data['Tm'])
+    ax.set_xticklabels(filtered_data['Tm'], rotation=45, ha='right')  # Adjust the rotation angle as needed
     ax.legend()
 
     st.pyplot(fig)
