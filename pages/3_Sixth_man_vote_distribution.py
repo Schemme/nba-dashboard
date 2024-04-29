@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 
 st.title('6th man of the year votes')
-df = pd.read_csv('/workspaces/nba-dashboard/data/sixth-man.csv')
+df = pd.read_csv('sixth-man.csv')
 #Split player name away from it's team, unimportant
 df['Player'] = df['Player'].str.split(',').str[0]
 
