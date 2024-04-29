@@ -22,7 +22,7 @@ Aside from being named MVP, this is the biggest recognition a player can receive
     df = load_data('https://raw.githubusercontent.com/Brevon1104/dsc205/main/Total%20NBA%20Stats.csv')
 
     # Sidebar for position selection
-    position = st.sidebar.selectbox('Select Position', df['Pos'].unique())
+    position = st.selectbox('Select Position', df['Pos'].unique())
 
     # Filter data for selected position
     position_data = df[(df['Pos'] == position) & (df['G'] >= 65)]
