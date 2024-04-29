@@ -17,31 +17,31 @@ df_mvp = df[df['Player'].isin(mvps)]
 # Set  index to 'Player' 
 df_mvp.set_index('Player', inplace=True)
 
-# Calculate derived columns
+# Calculate columns
 df_mvp['Points per game']= df_mvp['PTS']/df_mvp['G']
 df_mvp['Assists per game']= df_mvp['AST']/df_mvp['G']
 df_mvp['Rebounds per game']= (df_mvp['ORB']+df_mvp['DRB'])/df_mvp['G']
 df_mvp['Blocks per game']= df_mvp['BLK']/df_mvp['G']
 df_mvp = df_mvp.round(2)
 
-# Assign ranks to MVPs
+# Assign ranks to MVPs based on alphabetical name and order in list
 rank = [5,7,10,2,3,9,8,1,6,4]
 df_mvp['Rank'] = rank
 
 # Select specific columns
 df_mvp = df_mvp[['Rank', 'Points per game', 'Assists per game', 'Rebounds per game', 'Blocks per game']]
 
-# Streamlit app
+# Title/blurb
 st.header('NBA MVP Comparison')
 st.write(df_mvp.sort_values(by='Rank'))
 st.markdown("Above is the general consensus between us as to the top 10 players in the NBA right now, just something to guide conclusions a bit.")
 # Dropdown menu for selecting player
 selected_player = st.selectbox('Select a player:', mvps)
 
-# Dropdown menu for selecting category
+# Dropdown menu for category
 selected_category = st.selectbox('Select a category:', ['Points per game', 'Assists per game', 'Rebounds per game', 'Blocks per game'])
 
-# Getting desired specific players specific stat
+# Getting specific players selected stat
 player_value = df_mvp.loc[selected_player, selected_category]
 col_total=df_mvp[selected_category].sum()
 PERCENT=(player_value/col_total)*100
@@ -59,7 +59,7 @@ if PERCENT<8:
 if 8<PERCENT<12:
     col = '#FED406'
 
-# Create DataFrame for plotly pie chart
+# Create DataFrame for plotly chart
 df_pie=pd.DataFrame({'Player': [selected_player, 'Other Players'], 'Percentage':[PERCENT, OPP_PERCENT]})
 
 # Set colors
