@@ -10,21 +10,20 @@ def load_data():
 
 df_projections, df_stats = load_data()
 
-# Print column names to debug
-st.write("Projections Columns:", df_projections.columns)
-st.write("Stats Columns:", df_stats.columns)
+# Adjust column names in actuals to match projections for consistent comparison
+df_stats.rename(columns={'MP': 'MPG', 'FG%': 'FGP', 'FT%': 'FTP', '3P': '3PM', 'PTS': 'PTS'}, inplace=True)
 
-def preprocess_data(df):
-    numeric_columns = ['GP', 'MPG', 'FG%', 'FT%', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGM', 'FGA', 'FTM', 'FTA']
-    for col in numeric_columns:
+def preprocess_data(df, columns):
+    for col in columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col].astype(str).replace('%', '').replace(',', '.'), errors='coerce')
-        else:
-            st.write(f"Column {col} not found in DataFrame")
     return df
 
-df_projections = preprocess_data(df_projections)
-df_stats = preprocess_data(df_stats)
+# Define the common columns to compare based on projections
+common_columns = ['GP', 'MPG', 'FGP', 'FTP', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGM', 'FGA', 'FTM', 'FTA']
+
+df_projections = preprocess_data(df_projections, common_columns)
+df_stats = preprocess_data(df_stats, common_columns)
 
 st.title('NBA Player Stats Comparison: 2023-2024 Projections vs. Actuals')
 
@@ -37,7 +36,7 @@ def plot_player_data(player):
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 6))
     if not player_projections.empty and not player_actuals.empty:
-        categories = ['GP', 'MPG', 'FG%', 'FT%', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGM', 'FGA', 'FTM', 'FTA']
+        categories = common_columns
         x = range(len(categories))
         ax.bar(x, player_projections[categories].values[0], width=0.4, label='Projections', align='center')
         ax.bar(x, player_actuals[categories].values[0], width=0.4, label='Actuals', align='edge')
@@ -50,3 +49,4 @@ def plot_player_data(player):
         st.write("No data available for this player.")
 
 plot_player_data(selected_player)
+
