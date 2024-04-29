@@ -14,10 +14,10 @@ def load_data():
     return df
 
 def calculate_team_ratings(df):
-    # Group by team and calculate average ratings
+    # Group by team and calculate mean ratings
     return df.groupby('Tm').agg({
-        'Offensive_Rating': 'average', 
-        'Defensive_Rating': 'average'
+        'Offensive_Rating': 'mean', 
+        'Defensive_Rating': 'mean'
     }).reset_index()
 
 def plot_bar_chart(data, selected_teams, rating_type):
