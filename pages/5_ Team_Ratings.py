@@ -41,7 +41,7 @@ def plot_ratings(data, selected_teams, rating_type):
 def main():
     st.title("NBA Team Ratings Visualization")
     st.write("""
-    Welcome to the NBA Team Ratings Visualization app. This tool allows you to compare the offensive and defensive ratings of NBA teams for the 2023-2024 season.
+    NBA Team Ratings Visualization app. This tool allows you to compare the offensive and defensive ratings of NBA teams for the 2023-2024 season.
     """)
     
     st.markdown("""
