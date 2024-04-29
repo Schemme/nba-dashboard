@@ -8,7 +8,7 @@ df.set_index('Player', inplace=True)
 
 st.title('NBA Rookie of the Year Stats')
 
-st.write("""Going into the 2023 draft, French basketball star was drafted with the 1st overall pick to the San Antonio Spurs. He was projected to be the best incoming player the league has seen since LeBron James was drafted out of high school in 2003. With all of this hype came the predictions that he would easily win Rookie of the Year. This model is to show if his first season lived up to the hype.""")
+st.write("""Going into the 2023 draft, the hype was all around French basketball star Victor Wembenyama. He was drafted with the 1st overall pick to the San Antonio Spurs, and was projected to be the best incoming player the league has seen since LeBron James was drafted out of high school in 2003. With all of this hype came the predictions that he would easily win Rookie of the Year. This model is to show if his first season lived up to the hype.""")
 
 selected_columns = ['FG%', '3P%', 'PTS', 'TRB', 'AST', 'STL', 'BLK', 'G']
 df_selected = df[selected_columns]
