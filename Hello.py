@@ -12,7 +12,7 @@ st.markdown(
         font-weight: bold;
     }
     .nba-color {
-        color: #1d428a;  # Dark blue color; change as needed
+        color: #FF0000;  
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
     </style>
