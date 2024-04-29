@@ -1,8 +1,8 @@
 import streamlit as st
 
-# Since the image is in the same directory as the script, you can use just the filename
-nba_logo_path = "nba_logo_2024.png"
-st.image(nba_logo_path, caption='NBA Logo 2024', width=300)  # Adjust the width as needed
+# Provide an absolute path if relative paths fail
+nba_logo_path = "/absolute/path/to/nba-dashboard/nba_logo_2024.png"
+st.image(nba_logo_path, caption='NBA Logo 2024', width=300)
 
 st.write("# NBA Dashboard")
 
