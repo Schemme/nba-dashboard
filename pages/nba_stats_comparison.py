@@ -2,20 +2,19 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load data with proper header adjustment
 @st.cache
 def load_data():
-    projections = pd.read_csv('/mnt/data/Player Projects Search 2023-24 Preseason - Copy of AVERAGE PROJECTIONS (1).csv', skiprows=1)
-    actuals = pd.read_csv('/mnt/data/2023-2024 NBA Player Stats_exported.csv')
+    # Load data using the correct relative paths
+    projections = pd.read_csv('pages/Player Projects Search 2023-24 Preseason - Copy of AVERAGE PROJECTIONS.csv', skiprows=1)
+    actuals = pd.read_csv('pages/2023-2024 NBA Player Stats_exported.csv')
     return projections, actuals
 
 df_projections, df_stats = load_data()
 
 # Rename columns to make them compatible
-df_stats.rename(columns={'MP': 'MPG', 'G': 'GP', 'FT%': 'FTP', 'FG%': 'FGP'}, inplace=True)
+df_stats.rename(columns={'MP': 'MPG', 'G': 'GP', 'FT%': 'FTP', 'FG%': 'FGP', '3P': '3PM', 'Player': 'PLAYER'}, inplace=True)
 df_projections.rename(columns={'FT%': 'FTP', 'FG%': 'FGP'}, inplace=True)
 
-# Preprocess data for numeric values
 def preprocess_data(df):
     numeric_columns = ['GP', 'MPG', 'FGP', 'FTP', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'FGM', 'FGA', 'FTM', 'FTA']
     for col in numeric_columns:
@@ -25,16 +24,14 @@ def preprocess_data(df):
 df_projections = preprocess_data(df_projections)
 df_stats = preprocess_data(df_stats)
 
-# Streamlit interface
 st.title('NBA Player Stats Comparison: 2023-2024 Projections vs. Actuals')
 
 player_list = df_projections['PLAYER'].unique()
 selected_player = st.selectbox('Select a Player', player_list)
 
-# Function to plot data
 def plot_player_data(player):
     player_projections = df_projections[df_projections['PLAYER'].str.contains(player, na=False)]
-    player_actuals = df_stats[df_stats['Player'].str.contains(player, na=False)]
+    player_actuals = df_stats[df_stats['PLAYER'].str.contains(player, na=False)]
 
     fig, ax = plt.subplots(1, 1, figsize=(10, 6))
     
@@ -52,4 +49,3 @@ def plot_player_data(player):
         st.write("No data available for this player.")
 
 plot_player_data(selected_player)
-
