@@ -4,20 +4,21 @@ import matplotlib.pyplot as plt
 
 @st.cache
 def load_data():
-    projections = pd.read_csv('pages/Player Projects Search 2023-24 Preseason - Copy of AVERAGE PROJECTIONS.csv')
-    actuals = pd.read_csv('pages/2023-2024 NBA Player Stats_exported.csv')
+    # Adjust file paths as necessary
+    projections = pd.read_csv('path_to_projections_file.csv')
+    actuals = pd.read_csv('path_to_actuals_file.csv')
+
+    # Assuming columns are named correctly after loading
     return projections, actuals
 
 df_projections, df_stats = load_data()
 
-# Debugging: Print the column names to verify
+# Check column names directly after loading
 st.write("Projections Columns:", df_projections.columns)
 st.write("Stats Columns:", df_stats.columns)
 
-# Correct column naming if necessary
-df_stats.rename(columns={'Player': 'PLAYER'}, inplace=True)  # Ensure this matches the projections DataFrame
-
 def preprocess_data(df, columns):
+    # Here columns are the ones common and correctly named in both datasets
     for col in columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col].astype(str).replace('%', '').replace(',', '.'), errors='coerce')
@@ -25,14 +26,14 @@ def preprocess_data(df, columns):
             st.write(f"Column {col} not found in DataFrame")
     return df
 
-# Define the common columns to compare based on projections
-common_columns = ['GP', 'MPG', 'FGP', 'FTP', 'PTS', '3PM', 'REB', 'AST', 'STL', 'BLK', 'TO', 'FGM', 'FGA', 'FTM', 'FTA']
-
+# Define common columns as per the corrected dataset
+common_columns = ['G', 'MPG', 'FG%', 'FT%', 'PTS', '3P', 'REB', 'AST', 'STL', 'BLK', 'TOV', 'FGM', 'FGA', 'FTM', 'FTA']
 df_projections = preprocess_data(df_projections, common_columns)
 df_stats = preprocess_data(df_stats, common_columns)
 
 st.title('NBA Player Stats Comparison: 2023-2024 Projections vs. Actuals')
 
+# Ensure player name columns are named 'PLAYER' in both datasets
 player_list = df_projections['PLAYER'].unique()
 selected_player = st.selectbox('Select a Player', player_list)
 
