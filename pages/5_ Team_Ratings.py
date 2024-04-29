@@ -43,7 +43,7 @@ def main():
 
     # Dropdown to select teams
     teams = team_ratings['Tm'].unique().tolist()
-    selected_teams = st.multiselect('Select teams to compare:', teams, default=teams)
+    selected_teams = st.multiselect('Select teams to compare:', teams, default=[])
 
     # Dropdown to select rating type
     rating_types = ['Offensive_Rating', 'Defensive_Rating']
